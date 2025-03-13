@@ -297,7 +297,13 @@ function filterProducts(category, searchQuery = "") {
     // Add click event to each product
     productItem.addEventListener("click", () => {
       // Redirect to product view page with the product's index as the ID
-      location.href = `product_view.html?id=${index}`;
+      let id = "";
+      savorPinoyMenu.forEach((data, index) => {
+        if (product.title == data.title) {
+          id = index;
+        }
+      });
+      location.href = `product_view.html?id=${id}`;
     });
 
     productsMain.appendChild(productItem);
