@@ -1,3 +1,4 @@
+// DOM Elements
 const allProducts = document.querySelectorAll(".products-main li");
 const productQuantity = document.getElementById("product-quantity");
 const totalAmount = document.getElementById("product-total-amount");
@@ -8,8 +9,11 @@ const productImages = document.querySelectorAll(".product-images li");
 const returnToProductView = document.getElementById("return-product-view");
 const cart = document.querySelector(".cart-section");
 const category = document.querySelectorAll(".categories .category");
+const productsMain = document.querySelector(".products-main");
+const searchInput = document.querySelector(".search-container input");
+const searchButton = document.querySelector(".search-container button");
 
-/* Category section */
+// Category Data
 const categories = [
   { name: "All Products", icon: "fa-solid fa-basket-shopping" },
   { name: "Main Dishes & Soups", icon: "fa-solid fa-utensils" },
@@ -19,12 +23,7 @@ const categories = [
   { name: "Desserts", icon: "fa-solid fa-ice-cream" },
 ];
 
-/* Change all produccts as objects or arrrays */
-let productLi = Object.values(allProducts);
-/* This section are used for the images to change */
-let productItems = Object.values(productImages);
-
-/* Default menu savorPinoyMenu  */
+// Product Data
 const savorPinoyMenu = [
   // (Main Dishes & Soups)
   {
@@ -34,6 +33,7 @@ const savorPinoyMenu = [
     description:
       "Tangy and savory pork soup with fresh vegetables and tamarind-based broth.",
     image: ["assets/img/sinigang1.png", "assets/img/sinigang2.png", "assets/img/sinigang3.png", "assets/img/sinigang4.png", "assets/img/sinigang5.png"],
+
   },
   {
     title: "Adobong Manok at Baboy",
@@ -42,6 +42,7 @@ const savorPinoyMenu = [
     description:
       "Slow-cooked chicken and pork in a rich soy sauce, vinegar, and garlic blend.",
     image: ["assets/img/ad_manok1.png", "assets/img/ad_baboy2.png", "assets/img/ad_manok3.png", "assets/img/ad_baboy4.png", "assets/img/ad_manok5.png"],
+
   },
   {
     title: "Bulalo",
@@ -50,6 +51,7 @@ const savorPinoyMenu = [
     description:
       "Beef shank soup with bone marrow, corn, and vegetables in a flavorful broth.",
     image: ["assets/img/bulalo1.png", "assets/img/bulalo2.png", "assets/img/bulalo3.png", "assets/img/bulalo4.png", "assets/img/bulalo5.png"],
+
   },
   {
     title: "Kare-Kare",
@@ -58,6 +60,7 @@ const savorPinoyMenu = [
     description:
       "Thick peanut stew with oxtail, tripe, and vegetables, served with bagoong.",
     image: ["assets/img/karekare1.png", "assets/img/karekare2.png", "assets/img/karekare3.png", "assets/img/karekare4.png", "assets/img/karekare5.png"],
+
   },
   {
     title: "Tinolang Manok",
@@ -76,6 +79,7 @@ const savorPinoyMenu = [
     description:
       "Crispy and flavorful chopped pork cheeks with onions, chili, and egg on a sizzling plate.",
     image: ["assets/img/sisig1.png", "assets/img/sisig2.png", "assets/img/sisig3.png", "assets/img/sisig4.png", "assets/img/sisig5.png"],
+
   },
   {
     title: "Sizzling Tofu",
@@ -92,6 +96,7 @@ const savorPinoyMenu = [
     description:
       "Grilled milkfish served with a special soy sauce and calamansi mix.",
     image: ["assets/img/bangus1.png", "assets/img/bangus2.png", "assets/img/bangus3.png", "assets/img/bangus4.png", "assets/img/bangus5.png"],
+
   },
 
   // Silog Meals
@@ -101,7 +106,8 @@ const savorPinoyMenu = [
     price: 140,
     description:
       "Marinated beef tapa with garlic rice and a sunny-side-up egg.",
-    image: ["assets/img/tapsilog1.png", "assets/img/tapsilog2.png", "assets/img/tapsilog3.png", "assets/img/tapsilog4.png", "assets/img/tapsilog5.png"],
+
+    image: ["assets/img/tapsilog1.png", "assets/img/tapsilog2.png", "assets/img/tapsilog3.png", "assets/img/tapsilog4.png", "assets/img/tapsilog5.png"
   },
   {
     title: "Longsilog",
@@ -126,6 +132,7 @@ const savorPinoyMenu = [
     description:
       "Savory stir-fried egg noodles with pork, shrimp, and vegetables.",
     image: ["assets/img/canton1.png", "assets/img/canton2.png", "assets/img/canton3.png", "assets/img/canton4.png", "assets/img/canton5.png"],
+
   },
   {
     title: "Lomi",
@@ -163,37 +170,57 @@ const savorPinoyMenu = [
   },
 ];
 
-/* This is for the cart section of the user*/
-let userCart = [
-  {
-    title: "Sinigang na Baboy",
-    price: 105,
-    category: "Main Dishes & Soups",
-    quantity: 2,
-    description:
-      "Tangy and savory pork soup with fresh vegetables and tamarind-based broth.",
-    image: "",
-  },
-  {
-    title: "Halo-halo",
-    category: "Desserts",
-    price: 99,
-    quantity: 1,
-    description:
-      "A colorful mix of shaved ice, sweetened fruits, beans, leche flan, and ube, topped with ice cream.",
-    image: "",
-  },
-];
+// Initialize the product grid with all products
+window.addEventListener("load", () => {
+  filterProducts("All Products");
+});
 
-let product = {
-  title: "Example Name",
-  price: 0,
-  category: "Sample Category",
-  quantity: 0,
-  description: "Sample Description",
-  image: "Image Source",
-};
+// Filter and display products based on category or search query
+function filterProducts(category, searchQuery = "") {
+  productsMain.innerHTML = ""; // Clear the current products
 
+  let filteredProducts = [];
+  if (category === "All Products") {
+    filteredProducts = savorPinoyMenu; // Show all products
+  } else {
+    filteredProducts = savorPinoyMenu.filter(
+      (product) => product.category === category
+    );
+  }
+
+  // Apply search filter
+  if (searchQuery) {
+    filteredProducts = filteredProducts.filter((product) =>
+      product.title.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }
+
+  // Display the filtered products
+  filteredProducts.forEach((product, index) => {
+    const productItem = document.createElement("li");
+    productItem.classList.add("product");
+    productItem.innerHTML = `
+      <img src="${product.image[0]}" alt="Product Image" />
+      <p class="category">${product.title}</p>
+      <p class="rating">⭐⭐⭐⭐⭐ 36 Rating</p>
+      <p class="price">₱${product.price}</p>
+    `;
+
+    // Add click event to each product
+    productItem.addEventListener("click", () => {
+      // Redirect to product view page with the product's index as the ID
+      location.href = `product_view.html?id=${index}`;
+    });
+
+    productsMain.appendChild(productItem);
+  });
+
+  // Update the product count
+  const productCount = document.querySelector(".product-grid h2");
+  productCount.textContent = `${category} (${filteredProducts.length})`;
+}
+
+// Category click event
 category.forEach((val, index) => {
   val.children[1].innerText = categories[index].name;
 
@@ -206,51 +233,27 @@ category.forEach((val, index) => {
 
     // Filter products based on the selected category
     const selectedCategory = categories[index].name;
-    filterProducts(selectedCategory);
+    filterProducts(selectedCategory, searchInput.value);
   });
 });
 
-/* Function to filter and display products */
-function filterProducts(category) {
-  const productsMain = document.querySelector(".products-main");
-  productsMain.innerHTML = ""; // Clear the current products
-
-  let filteredProducts = [];
-  if (category === "All Products") {
-    filteredProducts = savorPinoyMenu; // Show all products
-  } else {
-    filteredProducts = savorPinoyMenu.filter(
-      (product) => product.category === category
-    );
-  }
-
-  // Display the filtered products
-  filteredProducts.forEach((product) => {
-    const productItem = document.createElement("li");
-    productItem.classList.add("product");
-
-    productItem.innerHTML = `
-      <img src="${product.image}" alt="Product Image" />
-      <p class="category">${product.title}</p>
-      <p class="rating">⭐⭐⭐⭐⭐ 36 Rating</p>
-      <p class="price">₱${product.price}</p>
-    `;
-
-    productsMain.appendChild(productItem);
-  });
-
-  // Update the product count
-  const productCount = document.querySelector(".product-grid h2");
-  productCount.textContent = `${category} (${filteredProducts.length})`;
-}
-
-/* Change Location to product view */
-productLi.forEach((li, index) => {
-  li.addEventListener("click", function () {
-    location.href = "product_view.html?id=" + index;
-  });
+// Search Functionality
+searchInput.addEventListener("input", () => {
+  const selectedCategory = document.querySelector(
+    ".categories .category.selected"
+  ).children[1].innerText;
+  filterProducts(selectedCategory, searchInput.value);
 });
 
+searchButton.addEventListener("click", (e) => {
+  e.preventDefault();
+  const selectedCategory = document.querySelector(
+    ".categories .category.selected"
+  ).children[1].innerText;
+  filterProducts(selectedCategory, searchInput.value);
+});
+
+// Change product view
 function changeProductView(url) {
   if (!url) {
     return;
@@ -260,40 +263,18 @@ function changeProductView(url) {
     const product = document.querySelector(".product-body");
     const productTotalAmount = document.querySelector("#product-total-amount");
 
-    product.children[0].innerText = savorPinoyMenu[parseInt(id)].title;
-    product.children[2].innerText = "₱" + savorPinoyMenu[parseInt(id)].price;
-    product.children[3].innerText = savorPinoyMenu[parseInt(id)].description;
-    productTotalAmount.children[0].value =
-      "₱" + savorPinoyMenu[parseInt(id)].price;
+    const selectedProduct = savorPinoyMenu[parseInt(id)];
+
+    product.children[0].innerText = selectedProduct.title;
+    product.children[2].innerText = "₱" + selectedProduct.price;
+    product.children[3].innerText = selectedProduct.description;
+    productTotalAmount.children[0].value = "₱" + selectedProduct.price;
   }
 }
 
 changeProductView(window.location.search);
 
-/* Make the image change when click in the product view page */
-productItems.forEach((li) => {
-  li.addEventListener("click", () => {
-    let tempSrc = document.querySelector(".product-images img");
-    tempSrc.src = li.firstChild.src;
-    li.src = tempSrc.src;
-  });
-});
-
-productQuantity.firstElementChild.addEventListener("input", function () {
-  const searchQuery = window.location.search;
-  const urlParams = new URLSearchParams(searchQuery);
-  const id = urlParams.get("id");
-
-  if (productQuantity.firstElementChild.value <= 0) {
-    return;
-  }
-  totalAmount.firstElementChild.value =
-    "₱" +
-    productQuantity.firstElementChild.value *
-      savorPinoyMenu[parseInt(id)].price;
-});
-
-/* This section use to create or add items to cart */
+// Add to cart functionality
 addToCart.addEventListener("click", function (e) {
   e.preventDefault();
   const addItem = { ...product };
@@ -308,14 +289,14 @@ addToCart.addEventListener("click", function (e) {
   addItem.quantity = productQuantity.firstElementChild.value;
   addItem.image = savorPinoyMenu[parseInt(id)].image;
 
-  /* Hanling Errors or Cathing data if already exist */
+  // Check if item already exists in cart
   userCart.forEach((li) => {
     if (addItem.title == li.title) {
       handler = true;
     }
   });
 
-  /* Update Cart total items */
+  // Update cart
   if (handler) {
     userCart[userCart.length - 1].quantity =
       parseInt(userCart[userCart.length - 1].quantity) +
@@ -331,44 +312,17 @@ addToCart.addEventListener("click", function (e) {
   createNotification("Added to Cart Successfully!", "text-green");
 });
 
-/* This function is used to create notification with a parameter text and color */
-function createNotification(text, color) {
-  const ul = document.getElementById("notification");
-  const notification = document.createElement("li");
-  const button = document.createElement("button");
-  const span = document.createElement("span");
-
-  notification.className = color;
-  notification.innerText = text;
-  button.style.marginLeft = "1em";
-  button.style.border = "none";
-  button.style.cursor = "pointer";
-  span.style.fontSize = "1.2rem";
-  span.classList = "fa-solid fa-circle-xmark";
-  span.style.color = "gray";
-
-  button.appendChild(span);
-  notification.appendChild(button);
-
-  button.addEventListener("click", function () {
-    notification.remove();
-  });
-
-  if (ul.firstChild) {
-    ul.insertBefore(notification, ul.firstChild);
-  } else {
-    ul.appendChild(notification);
-  }
-  setTimeout(() => {
-    notification.remove();
-  }, 3000);
-}
-
-/* Display Cart Modal */
+// Display cart modal
 cartBtnModal.addEventListener("click", function () {
   cart.style.display = "block";
+  displayCartItems();
+});
 
-  if (userCart.length == 0) {
+// Display cart items
+function displayCartItems() {
+  cartList.innerHTML = ""; // Clear the cart list
+
+  if (userCart.length === 0) {
     const li = document.createElement("li");
     li.innerText = "No Items in Cart";
     li.style.justifyContent = "center";
@@ -377,202 +331,53 @@ cartBtnModal.addEventListener("click", function () {
     li.style.color = "red";
     cartList.appendChild(li);
   } else {
-    if (cartList.childElementCount) {
-      return;
-    } else {
-      userCart.forEach((li, index) => {
-        const addLi = document.createElement("li");
-        const img = document.createElement("img");
-        const div = document.createElement("div");
-        const h4 = document.createElement("h4");
-        const price = document.createElement("p");
-        const quantityForm = document.createElement("form");
-        const quantityLabel = document.createElement("label");
-        const quantityInput = document.createElement("input");
-        const minusButton = document.createElement("button");
-        const minusIcon = document.createElement("span");
-        const plusButton = document.createElement("button");
-        const plusIcon = document.createElement("span");
-        const amountLabel = document.createElement("label");
-        const amountInput = document.createElement("input");
-        const amountForm = document.createElement("form");
-        const closeForm = document.createElement("form");
-        const closeButton = document.createElement("button");
-        const closeIcon = document.createElement("span");
-
-        //<img> element
-        img.src = "assets/img/pork-sinigang.jpg";
-        img.alt = "Product Main Image";
-
-        //<h4> element
-        h4.textContent = li.title;
-
-        addLi.setAttribute("data-index", index);
-
-        //<p> element with class "price"
-        price.className = "price";
-        price.textContent = "₱" + li.price;
-
-        //first <form> element with class "product-quantity-form"
-        quantityForm.className = "product-quantity-form";
-
-        //<label> for quantity
-        quantityLabel.htmlFor = "product-quantity-2";
-        quantityLabel.textContent = "Quantity";
-
-        //<input> for quantity
-        quantityInput.type = "number";
-        quantityInput.name = "product-quantity-2";
-        quantityInput.id = "product-quantity-" + index;
-        quantityInput.min = "1";
-        quantityInput.value = li.quantity;
-
-        //minus button
-        minusButton.type = "submit";
-        minusButton.id = "min-product-" + index;
-        minusIcon.className = "fa-solid fa-minus";
-        minusButton.appendChild(minusIcon);
-
-        //plus button
-        plusButton.type = "submit";
-        plusButton.id = "min-product-" + index;
-        plusIcon.className = "fa-solid fa-plus";
-        plusButton.appendChild(plusIcon);
-
-        // Append <h4> and <p> to <div>
-        div.appendChild(h4);
-        div.appendChild(price);
-
-        // Append <label>, <input>, and buttons to the quantity form
-        quantityForm.appendChild(quantityLabel);
-        quantityForm.appendChild(quantityInput);
-        quantityForm.appendChild(minusButton);
-        quantityForm.appendChild(plusButton);
-
-        //second <form> element with class "product-amount-form"
-        amountForm.className = "product-amount-form";
-
-        //<label> for total amount
-        amountLabel.htmlFor = "total-amount-2";
-        amountLabel.textContent = "Total Amount";
-
-        //<input> for total amount
-        amountInput.type = "text";
-        amountInput.name = "total-amount-2";
-        amountInput.id = "total-amount-" + index;
-        amountInput.value = "₱" + parseInt(li.price) * parseInt(li.quantity);
-        amountInput.disabled = true;
-
-        //Add event of minus button
-        minusButton.addEventListener("click", function (e) {
-          e.preventDefault();
-          if (quantityInput.value <= 1) {
-            return;
-          }
-          quantityInput.value -= 1;
-          amountInput.value = parseInt(quantityInput.value) * li.price;
-        });
-
-        //Add event of minus button
-        plusButton.addEventListener("click", function (e) {
-          e.preventDefault();
-          if (quantityInput.value <= 1) {
-            return;
-          }
-          quantityInput.value = parseInt(quantityInput.value) + 1;
-          amountInput.value = parseInt(quantityInput.value) * li.price;
-        });
-
-        // Append <label> and <input> to the amount form
-        amountForm.appendChild(amountLabel);
-        amountForm.appendChild(amountInput);
-
-        //third <form> element for the close button
-
-        //close button
-        closeButton.type = "submit";
-        closeButton.className = "cart-close-button";
-        closeIcon.className = "fa-solid fa-circle-xmark";
-        closeButton.appendChild(closeIcon);
-
-        closeButton.addEventListener("click", function () {
-          userCart.forEach((cart, index) => {
-            if (index == addLi.getAttribute("data-index")) {
-              const title = cart.title;
-              const price = cart.price;
-              const quantity = cart.quantity;
-              const description = cart.description;
-              const image = cart.image;
-
-              userCart[index].title = userCart[userCart.length - 1].title;
-              userCart[index].price = userCart[userCart.length - 1].price;
-              userCart[index].quantity = userCart[userCart.length - 1].quantity;
-              userCart[index].description =
-                userCart[userCart.length - 1].description;
-              userCart[index].image = userCart[userCart.length - 1].image;
-
-              userCart[userCart.length - 1].title = title;
-              userCart[userCart.length - 1].price = price;
-              userCart[userCart.length - 1].quantity = quantity;
-              userCart[userCart.length - 1].description = description;
-              userCart[userCart.length - 1].image = image;
-
-              userCart.pop();
-            }
-          });
-          if (userCart.length <= 0) {
-            const li = document.createElement("li");
-            li.innerText = "No Items in Cart";
-            li.style.justifyContent = "center";
-            li.style.fontSize = "1.3em";
-            li.style.padding = "1em";
-            li.style.color = "red";
-            cartList.appendChild(li);
-          }
-          addLi.remove();
-          cartBtnModal.innerHTML =
-            "<i class='fa-solid fa-shopping-cart'></i> Cart (" +
-            userCart.length +
-            ")";
-        });
-
-        // Append the close button to the form
-        closeForm.appendChild(closeButton);
-
-        // Append all elements to the <li>
-        addLi.appendChild(img);
-        addLi.appendChild(div);
-        addLi.appendChild(quantityForm);
-        addLi.appendChild(amountForm);
-        addLi.appendChild(closeForm);
-        cartList.appendChild(addLi);
-      });
-    }
+    userCart.forEach((item, index) => {
+      const cartItem = document.createElement("li");
+      cartItem.innerHTML = `
+        <img src="assets/img/pork-sinigang.jpg" alt="Product Image" />
+        <div>
+          <h4>${item.title}</h4>
+          <p class="price">₱${item.price}</p>
+        </div>
+        <form class="product-quantity-form">
+          <label for="quantity-${index}">Quantity</label>
+          <input type="number" id="quantity-${index}" value="${item.quantity}" min="1" />
+        </form>
+        <form class="close-form">
+          <button type="submit" class="cart-close-button">&times;</button>
+        </form>
+      `;
+      cartList.appendChild(cartItem);
+    });
   }
-});
+}
 
+// Close cart modal
 returnToProductView.addEventListener("click", function (e) {
   e.preventDefault();
   cart.style.display = "none";
 });
 
-/* Display Cart Quantity */
-if (!userCart.length == 0) {
-  cartBtnModal.innerHTML =
-    "<i class='fa-solid fa-shopping-cart'></i> Cart (" + userCart.length + ")";
+// Notification system
+function createNotification(text, color) {
+  const notification = document.createElement("li");
+  notification.className = color;
+  notification.innerText = text;
+
+  const closeButton = document.createElement("button");
+  closeButton.innerHTML = "&times;";
+  closeButton.addEventListener("click", () => notification.remove());
+
+  notification.appendChild(closeButton);
+  document.getElementById("notification").appendChild(notification);
+
+  setTimeout(() => notification.remove(), 3000);
 }
 
-/* For Authentication */
-// Get modal elements
+// Signup modal functionality
 const signupModal = document.getElementById("signupModal");
-
-// Get buttons to open modals
 const signupBtn = document.querySelector(".signup-btn");
-
-// Get links to switch between modals
 const showLogin = document.getElementById("showLogin");
-
-// Get close buttons
 const closeModals = document.querySelectorAll(".close-modal");
 
 // Open signup modal
@@ -618,7 +423,7 @@ document.getElementById("signupForm").addEventListener("submit", (e) => {
     return;
   }
 
-  // Simulate signup logic (replace with actual API call)
+  // Simulate signup logic
   console.log("Signup with:", { firstName, lastName, email, password });
   alert("Signup successful!");
   signupModal.style.display = "none";
